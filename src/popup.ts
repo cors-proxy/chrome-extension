@@ -12,9 +12,15 @@ const addBtn = document.getElementById("addBtn") as HTMLButtonElement;
 const domainList = document.getElementById("domainList") as HTMLUListElement;
 const emptyState = document.getElementById("emptyState") as HTMLDivElement;
 const errorEl = document.getElementById("error") as HTMLDivElement;
-const globalToggle = document.getElementById(
-  "globalToggle"
-) as HTMLInputElement;
+const globalToggle = document.getElementById("globalToggle") as HTMLInputElement;
+const detectedSection = document.getElementById("detectedSection") as HTMLDivElement;
+const detectedList = document.getElementById("detectedList") as HTMLUListElement;
+const reloadBanner = document.getElementById("reloadBanner") as HTMLDivElement;
+const reloadBtn = document.getElementById("reloadBtn") as HTMLButtonElement;
+
+let currentTabId: number | null = null;
+let existingDomains: Set<string> = new Set();
+let needsReload = false;
 
 function showError(message: string): void {
   errorEl.textContent = message;
@@ -22,6 +28,18 @@ function showError(message: string): void {
   setTimeout(() => {
     errorEl.classList.remove("show");
   }, 3000);
+}
+
+function showReloadBanner(): void {
+  needsReload = true;
+  reloadBanner.classList.remove("hidden");
+}
+
+async function reloadCurrentTab(): Promise<void> {
+  if (currentTabId) {
+    await chrome.tabs.reload(currentTabId);
+    window.close();
+  }
 }
 
 function createDeleteIcon(): SVGSVGElement {
@@ -78,10 +96,51 @@ function createDomainItem(domain: ProxyDomain): HTMLLIElement {
   return li;
 }
 
+function createDetectedItem(hostname: string): HTMLLIElement {
+  const li = document.createElement("li");
+  li.className = "detected-item";
+
+  const hostnameEl = document.createElement("span");
+  hostnameEl.className = "hostname";
+  hostnameEl.textContent = hostname;
+
+  const quickAddBtn = document.createElement("button");
+  quickAddBtn.className = "btn-quick-add";
+  quickAddBtn.textContent = "Add";
+  quickAddBtn.addEventListener("click", async () => {
+    try {
+      await addDomain(hostname);
+      showReloadBanner();
+      await render();
+    } catch (e) {
+      showError(e instanceof Error ? e.message : "Failed to add domain");
+    }
+  });
+
+  li.appendChild(hostnameEl);
+  li.appendChild(quickAddBtn);
+
+  return li;
+}
+
+async function loadDetectedDomains(): Promise<string[]> {
+  if (!currentTabId) return [];
+
+  return new Promise((resolve) => {
+    chrome.runtime.sendMessage(
+      { type: "GET_DETECTED", tabId: currentTabId },
+      (response) => {
+        resolve(response?.domains ?? []);
+      }
+    );
+  });
+}
+
 async function render(): Promise<void> {
   const { domains, globalEnabled } = await getStorage();
 
   globalToggle.checked = globalEnabled;
+  existingDomains = new Set(domains.map((d) => d.hostname));
 
   domainList.innerHTML = "";
 
@@ -89,11 +148,25 @@ async function render(): Promise<void> {
     emptyState.classList.remove("hidden");
   } else {
     emptyState.classList.add("hidden");
-    // Sort by creation date, newest first
     const sorted = [...domains].sort((a, b) => b.createdAt - a.createdAt);
     for (const domain of sorted) {
       domainList.appendChild(createDomainItem(domain));
     }
+  }
+
+  // Load and render detected domains
+  const detected = await loadDetectedDomains();
+  const newDetected = detected.filter((d) => !existingDomains.has(d));
+
+  detectedList.innerHTML = "";
+
+  if (newDetected.length > 0) {
+    detectedSection.classList.remove("hidden");
+    for (const hostname of newDetected) {
+      detectedList.appendChild(createDetectedItem(hostname));
+    }
+  } else {
+    detectedSection.classList.add("hidden");
   }
 }
 
@@ -104,11 +177,20 @@ async function handleAdd(): Promise<void> {
   try {
     await addDomain(value);
     domainInput.value = "";
+    showReloadBanner();
     await render();
   } catch (e) {
     showError(e instanceof Error ? e.message : "Failed to add domain");
   }
 }
+
+// Get current tab ID
+chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+  if (tabs[0]?.id) {
+    currentTabId = tabs[0].id;
+    render();
+  }
+});
 
 // Event listeners
 addBtn.addEventListener("click", handleAdd);
@@ -123,6 +205,8 @@ globalToggle.addEventListener("change", async () => {
   await toggleGlobal();
   await render();
 });
+
+reloadBtn.addEventListener("click", reloadCurrentTab);
 
 // Initial render
 render();

@@ -11,13 +11,21 @@ interface ProxyConfig {
 let config: ProxyConfig = { domains: [], globalEnabled: true };
 
 // Listen for config updates from content script
-window.addEventListener("__CORSPROXY_CONFIG__", ((event: CustomEvent<ProxyConfig>) => {
-  const prev = config.domains.length;
-  config = event.detail;
-  if (prev === 0 && config.domains.length > 0) {
-    console.log(`%c[CORSPROXY]%c Active for ${config.domains.length} domain(s)`, "color:#0070f3;font-weight:bold", "color:inherit");
+// Config is passed via DOM data attribute (CustomEvent.detail doesn't cross worlds)
+window.addEventListener("__CORSPROXY_CONFIG__", () => {
+  const configStr = document.documentElement.dataset.corsproxyConfig;
+  if (!configStr) return;
+
+  try {
+    const prev = config.domains.length;
+    config = JSON.parse(configStr);
+    if (prev === 0 && config.domains.length > 0) {
+      console.log(`%c[CORSPROXY]%c Active for ${config.domains.length} domain(s)`, "color:#0070f3;font-weight:bold", "color:inherit");
+    }
+  } catch {
+    // Invalid JSON, ignore
   }
-}) as EventListener);
+});
 
 function shouldProxy(url: string): boolean {
   if (!config.globalEnabled || config.domains.length === 0) return false;

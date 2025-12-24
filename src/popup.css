@@ -264,3 +264,115 @@ body {
 .empty-state.hidden {
   display: none;
 }
+
+.reload-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  margin-top: 12px;
+  background: rgba(0, 112, 243, 0.1);
+  border: 1px solid rgba(0, 112, 243, 0.3);
+  border-radius: 6px;
+}
+
+.reload-banner.hidden {
+  display: none;
+}
+
+.reload-banner span {
+  font-size: 12px;
+  color: #888;
+}
+
+.btn-reload {
+  padding: 6px 12px;
+  background: #0070f3;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-reload:hover {
+  background: #0060df;
+}
+
+.detected-section {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #333;
+}
+
+.detected-section.hidden {
+  display: none;
+}
+
+.detected-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.detected-title {
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #f44;
+}
+
+.detected-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.detected-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  background: rgba(255, 68, 68, 0.08);
+  border: 1px solid rgba(255, 68, 68, 0.2);
+  border-radius: 6px;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.detected-item:hover {
+  background: rgba(255, 68, 68, 0.12);
+  border-color: rgba(255, 68, 68, 0.3);
+}
+
+.detected-item .hostname {
+  flex: 1;
+  font-size: 12px;
+  font-family: "SF Mono", Monaco, Consolas, monospace;
+  color: #ccc;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.btn-quick-add {
+  padding: 4px 10px;
+  background: transparent;
+  color: #888;
+  border: 1px solid #444;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-quick-add:hover {
+  background: #ededed;
+  color: #000;
+  border-color: #ededed;
+}

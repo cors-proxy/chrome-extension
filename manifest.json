@@ -35,7 +35,8 @@
   ],
   "permissions": [
     "storage",
-    "tabs"
+    "tabs",
+    "webRequest"
   ],
   "host_permissions": [
     "<all_urls>"

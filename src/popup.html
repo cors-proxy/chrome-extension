@@ -35,6 +35,18 @@
         <p>No domains added yet</p>
         <span>Add domains that throw CORS errors</span>
       </div>
+
+      <div id="reloadBanner" class="reload-banner hidden">
+        <span>Reload page to apply changes</span>
+        <button id="reloadBtn" class="btn-reload">Reload</button>
+      </div>
+
+      <div id="detectedSection" class="detected-section hidden">
+        <div class="detected-header">
+          <span class="detected-title">Detected CORS Issues</span>
+        </div>
+        <ul id="detectedList" class="detected-list"></ul>
+      </div>
     </div>
     <script type="module" src="popup.js"></script>
   </body>
