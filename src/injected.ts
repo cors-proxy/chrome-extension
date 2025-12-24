@@ -44,8 +44,8 @@ function getProxiedUrl(url: string): string {
 }
 
 // Override fetch
-const originalFetch = window.fetch;
-window.fetch = function(input: RequestInfo | URL, init?: RequestInit): Promise<Response> {
+const originalFetch = window.fetch.bind(window);
+const patchedFetch = function(input: RequestInfo | URL, init?: RequestInit): Promise<Response> {
   const url = typeof input === "string"
     ? input
     : input instanceof URL
@@ -57,7 +57,7 @@ window.fetch = function(input: RequestInfo | URL, init?: RequestInit): Promise<R
     console.log(`%c[CORSPROXY]%c ${new URL(url, location.href).hostname}`, "color:#0070f3;font-weight:bold", "color:#888");
 
     if (typeof input === "string" || input instanceof URL) {
-      return originalFetch.call(this, proxiedUrl, init);
+      return originalFetch(proxiedUrl, init);
     } else {
       // Clone request with new URL
       const newRequest = new Request(proxiedUrl, {
@@ -71,12 +71,15 @@ window.fetch = function(input: RequestInfo | URL, init?: RequestInit): Promise<R
         referrer: input.referrer,
         integrity: input.integrity,
       });
-      return originalFetch.call(this, newRequest);
+      return originalFetch(newRequest);
     }
   }
 
-  return originalFetch.apply(this, arguments as any);
+  return originalFetch(input, init);
 };
+// Preserve static properties (e.g., fetch.preconnect)
+Object.assign(patchedFetch, window.fetch);
+window.fetch = patchedFetch as typeof fetch;
 
 // Override XMLHttpRequest.open
 const originalXHROpen = XMLHttpRequest.prototype.open;

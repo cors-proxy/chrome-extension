@@ -19,10 +19,8 @@ async function updateProxiedDomainsCache(): Promise<void> {
 // Initialize cache
 updateProxiedDomainsCache();
 
-// CORS-related error patterns (excluding adblocker errors)
-const CORS_ERROR_PATTERNS = [
-  "net::ERR_FAILED",
-];
+// CORS-related error patterns
+const CORS_ERROR_PATTERNS = ["net::ERR_FAILED"];
 
 // Errors caused by adblockers, not CORS
 const IGNORED_ERROR_PATTERNS = [
@@ -147,7 +145,7 @@ chrome.tabs.onRemoved.addListener((tabId) => {
 });
 
 // Handle messages from popup and content scripts
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
   if (message.type === "GET_CONFIG") {
     getStorage().then((data) => {
       sendResponse({
