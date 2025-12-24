@@ -2,11 +2,12 @@
 
 A lightweight Chrome extension that automatically routes requests through a CORS proxy for specified domains. Perfect for developers working with APIs that don't support CORS.
 
-<p align="center">
-  <img src="assets/screenshot-1.png" alt="CORSPROXY Extension" width="340">
-  &nbsp;&nbsp;
-  <img src="assets/screenshot-2.png" alt="CORSPROXY Detected Issues" width="340">
-</p>
+<table>
+  <tr>
+    <td><img src="assets/screenshot-1.png" alt="CORSPROXY Extension" width="100%"></td>
+    <td><img src="assets/screenshot-2.png" alt="CORSPROXY Detected Issues" width="100%"></td>
+  </tr>
+</table>
 
 ## Features
 
