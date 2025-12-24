@@ -1,6 +1,5 @@
 node_modules/
 dist/
-bun.lock
 *.log
 .DS_Store
 dist.zip
