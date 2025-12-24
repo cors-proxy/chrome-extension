@@ -21,18 +21,41 @@ jobs:
         with:
           bun-version: latest
 
+      - name: Setup Node.js (for crx3)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
       - name: Install dependencies
         run: bun install --frozen-lockfile
 
       - name: Build extension
         run: bun run build
 
-      - name: Create ZIP archive
+      - name: Verify build
+        run: |
+          test -f dist/manifest.json
+          test -f dist/background.js
+          test -f dist/content.js
+          test -f dist/injected.js
+          test -f dist/popup.html
+          echo "Build verified successfully"
+
+      - name: Create ZIP for Chrome Web Store
         run: |
           cd dist
           zip -r ../corsproxy-${{ github.event.release.tag_name }}.zip .
 
-      - name: Upload release asset
+      - name: Create CRX for direct install
+        run: |
+          npm install -g crx3
+          echo "${{ secrets.CRX_PRIVATE_KEY }}" > extension.pem
+          crx3 dist -p extension.pem -o corsproxy-${{ github.event.release.tag_name }}.crx
+          rm extension.pem
+
+      - name: Upload release assets
         uses: softprops/action-gh-release@v2
         with:
-          files: corsproxy-${{ github.event.release.tag_name }}.zip
+          files: |
+            corsproxy-${{ github.event.release.tag_name }}.zip
+            corsproxy-${{ github.event.release.tag_name }}.crx
