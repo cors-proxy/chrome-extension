@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "CORSPROXY",
+  "name": "CORSPROXY: Fix CORS Errors",
   "version": "1.0.0",
-  "description": "Fix CORS Errors",
+  "description": "Securely bypass CORS, CSP, CORB Errors with one click.",
   "icons": {
     "16": "assets/icon.png",
     "48": "assets/icon.png",
