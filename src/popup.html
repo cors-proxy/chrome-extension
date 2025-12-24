@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CORSPROXY</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header class="header">
+        <img src="assets/logo.png" alt="CORSPROXY" class="logo" />
+        <label class="toggle">
+          <input type="checkbox" id="globalToggle" />
+          <span class="toggle-slider"></span>
+        </label>
+      </header>
+
+      <div class="input-group">
+        <input
+          type="text"
+          id="domainInput"
+          placeholder="api.example.com"
+          autocomplete="off"
+          spellcheck="false"
+        />
+        <button id="addBtn" class="btn-add">Add</button>
+      </div>
+
+      <div id="error" class="error"></div>
+
+      <ul id="domainList" class="domain-list"></ul>
+
+      <div id="emptyState" class="empty-state">
+        <p>No domains added yet</p>
+        <span>Add domains that throw CORS errors</span>
+      </div>
+    </div>
+    <script type="module" src="popup.js"></script>
+  </body>
+</html>

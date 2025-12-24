@@ -1,0 +1,266 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, sans-serif;
+  background: #000;
+  color: #ededed;
+  width: 340px;
+  min-height: 200px;
+}
+
+.container {
+  padding: 16px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #333;
+}
+
+.logo {
+  height: 20px;
+  filter: brightness(0) invert(1);
+}
+
+.toggle {
+  position: relative;
+  width: 40px;
+  height: 22px;
+  cursor: pointer;
+}
+
+.toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-slider {
+  position: absolute;
+  inset: 0;
+  background: #333;
+  border-radius: 22px;
+  transition: background 0.2s;
+  cursor: pointer;
+}
+
+.toggle-slider::before {
+  content: "";
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  left: 3px;
+  top: 3px;
+  background: #666;
+  border-radius: 50%;
+  transition: transform 0.2s, background 0.2s;
+}
+
+.toggle input:checked + .toggle-slider {
+  background: #0070f3;
+}
+
+.toggle input:checked + .toggle-slider::before {
+  transform: translateX(18px);
+  background: #fff;
+}
+
+.input-group {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.input-group input {
+  flex: 1;
+  padding: 10px 12px;
+  background: #111;
+  border: 1px solid #333;
+  border-radius: 6px;
+  color: #ededed;
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.input-group input::placeholder {
+  color: #666;
+}
+
+.input-group input:focus {
+  border-color: #555;
+}
+
+.btn-add {
+  padding: 10px 16px;
+  background: #ededed;
+  color: #000;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-add:hover {
+  background: #fff;
+}
+
+.btn-add:active {
+  background: #ccc;
+}
+
+.error {
+  color: #f44;
+  font-size: 12px;
+  margin-bottom: 12px;
+  display: none;
+}
+
+.error.show {
+  display: block;
+}
+
+.domain-list {
+  list-style: none;
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+.domain-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.domain-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.domain-list::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 3px;
+}
+
+.domain-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: #111;
+  border: 1px solid #222;
+  border-radius: 6px;
+  margin-bottom: 8px;
+  transition: border-color 0.2s;
+}
+
+.domain-item:hover {
+  border-color: #333;
+}
+
+.domain-item.disabled {
+  opacity: 0.5;
+}
+
+.domain-item .hostname {
+  flex: 1;
+  font-size: 13px;
+  font-family: "SF Mono", Monaco, Consolas, monospace;
+  color: #888;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.domain-item.enabled .hostname {
+  color: #ededed;
+}
+
+.domain-toggle {
+  position: relative;
+  width: 32px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.domain-toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.domain-toggle .toggle-slider {
+  position: absolute;
+  inset: 0;
+  background: #333;
+  border-radius: 18px;
+  cursor: pointer;
+}
+
+.domain-toggle .toggle-slider::before {
+  width: 12px;
+  height: 12px;
+  left: 3px;
+  top: 3px;
+}
+
+.domain-toggle input:checked + .toggle-slider {
+  background: #0070f3;
+}
+
+.domain-toggle input:checked + .toggle-slider::before {
+  transform: translateX(14px);
+  background: #fff;
+}
+
+.btn-delete {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: #666;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: color 0.2s, background 0.2s;
+}
+
+.btn-delete:hover {
+  color: #f44;
+  background: rgba(255, 68, 68, 0.1);
+}
+
+.btn-delete svg {
+  width: 14px;
+  height: 14px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 32px 16px;
+  color: #666;
+}
+
+.empty-state p {
+  font-size: 14px;
+  margin-bottom: 4px;
+  color: #888;
+}
+
+.empty-state span {
+  font-size: 12px;
+}
+
+.empty-state.hidden {
+  display: none;
+}
