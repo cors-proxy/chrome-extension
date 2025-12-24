@@ -47,9 +47,11 @@ jobs:
           zip -r ../corsproxy-${{ github.event.release.tag_name }}.zip .
 
       - name: Create CRX for direct install
+        env:
+          CRX_PRIVATE_KEY_BASE64: ${{ secrets.CRX_PRIVATE_KEY_BASE64 }}
         run: |
           npm install -g crx3
-          echo "${{ secrets.CRX_PRIVATE_KEY }}" > extension.pem
+          echo "$CRX_PRIVATE_KEY_BASE64" | base64 -d > extension.pem
           crx3 dist -p extension.pem -o corsproxy-${{ github.event.release.tag_name }}.crx
           rm extension.pem
 
